@@ -1,6 +1,6 @@
 package enums;
 
 public enum BookingStatus {
-   CREATED, CONFIRMED, CANCELLED
+   CREATED, CONFIRMED, PAYMENT_PENDING,FAILED
 
 }

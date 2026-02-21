@@ -3,6 +3,8 @@ package entity;
 import enums.SeatsStatus;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -12,7 +14,7 @@ public class Show {
     private Screen screen;
     private LocalDateTime startTime;
     private double price;
-
+    private Map<String, SeatsStatus> seatStatusMap = new HashMap<>();
     public Show(){
 
     }
@@ -22,6 +24,9 @@ public Show(String showId,Movie movie,Screen screen,LocalDateTime startTime,doub
     this.screen=screen;
     this.startTime=startTime;
     this.price=price;
+    for (Seat seat : screen.getSeats()) {
+        seatStatusMap.put(seat.getSeatId(), SeatsStatus.AVAILABLE);
+    }
 
 }
 public Movie getMovie() {return this.movie;}
@@ -60,6 +65,16 @@ public Movie getMovie() {return this.movie;}
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public SeatsStatus getSeatStatus(String seatId) {
+        return seatStatusMap.get(seatId);
+    }
+
+    public void markSeatsBooked(List<String> seatIds) {
+        for (String seatId : seatIds) {
+            seatStatusMap.put(seatId, SeatsStatus.BOOKED);
+        }
     }
 
     @Override

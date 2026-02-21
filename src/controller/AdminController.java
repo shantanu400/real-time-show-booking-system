@@ -26,11 +26,11 @@ public class AdminController {
                           int seatsPerRow){
         adminServices.addScreen(screenId,name,theaterId,rows,seatsPerRow);
     }
-    public void createShow(String movieId,
+    public void createShow(String showId,String movieId,
                            String screenId,
                            LocalDateTime startTime,
                            double price) {
-        adminServices.createShow(movieId, screenId, startTime, price);
+        adminServices.createShow(showId,movieId, screenId, startTime, price);
     }
 
 

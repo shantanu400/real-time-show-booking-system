@@ -40,14 +40,14 @@ public class AdminServices {
 
     }
 
-    public void createShow(String movieId,
+    public void createShow(String showId,String movieId,
                            String screenId,
                            LocalDateTime startTime,
                            double price) {
         Movie movie=adminRepository.findMovieById(movieId);
         Screen screen=adminRepository.findScreenById(screenId);
 
-            Show show = new Show("M",movie, screen, startTime, price);
+            Show show = new Show(showId,movie, screen, startTime, price);
             adminRepository.saveShow(show);
 
 

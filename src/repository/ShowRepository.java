@@ -31,5 +31,17 @@ public class ShowRepository {
         }
         return result;
     }
+    public Show findById(String showId){
+        List<Show> shows=adminRepository.getAllShows();
+       Show show=null;
+        for(Show it: shows){
+            if(it.getShowId().equals(showId)){
+                show=it;
+                break;
+            }
+        }
+        if(show==null) throw new NotFoundException("This show is no longer exist");
+        return show;
+    }
 
 }
