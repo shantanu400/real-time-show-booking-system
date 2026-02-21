@@ -2,10 +2,14 @@ package service;
 
 import domain.SeatLockManager;
 import entity.Booking;
+import entity.Payment;
 import entity.Seat;
 import entity.Show;
 import enums.BookingStatus;
+import enums.PaymentMode;
+import enums.PaymentStatus;
 import enums.SeatsStatus;
+import payment.PaymentStrategy;
 import repository.BookingRepository;
 import repository.ShowRepository;
 
@@ -17,12 +21,14 @@ public class BookingServices {
     private final ShowRepository showRepository;
     private final BookingRepository bookingRepository;
     private final SeatLockManager lockManager;
+    private final PaymentServices paymentServices;
     public BookingServices(ShowRepository showRepository,
-                          BookingRepository bookingRepository) {
+                          BookingRepository bookingRepository,PaymentServices paymentServices) {
 
         this.showRepository = showRepository;
         this.bookingRepository = bookingRepository;
         this.lockManager = SeatLockManager.getInstance();
+        this.paymentServices=paymentServices;
     }
 
     public synchronized Booking createBooking(String showId, List<String> seatIds,String user, double amount) {
@@ -50,13 +56,20 @@ public class BookingServices {
         return booking;
     }
 
-    public BookingStatus confirmBooking(String bookingId, boolean paymentSuccess) {
+    public BookingStatus confirmBooking(String bookingId, PaymentMode mode, PaymentStrategy paymentStrategy) {
 
         Booking booking = bookingRepository.findById(bookingId);
         String showId = booking.getShowId();
         List<String> seatIds = booking.getSeatIds();
 
-        if (paymentSuccess) {
+        Payment payment = paymentServices.processPayment(
+                bookingId,
+                booking.getTotalAmount(),
+                mode,
+                paymentStrategy
+        );
+
+        if (payment.getStatus() == PaymentStatus.SUCCESS) {
             Show show = showRepository.findById(showId);
             show.markSeatsBooked(seatIds);
 

@@ -1,5 +1,5 @@
 package enums;
 
 public enum PaymentMode {
-    CREDITCARD,UPI,WALLET
+    CREDITCARD,UPI,NETBANKING
 }

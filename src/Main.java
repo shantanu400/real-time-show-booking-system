@@ -1,14 +1,18 @@
 import controller.AdminController;
 import controller.UserController;
-import domain.SeatLockManager;
 import entity.Booking;
 import entity.Show;
 import enums.BookingStatus;
+import enums.PaymentMode;
+import factory.PaymentFactory;
+import payment.PaymentStrategy;
 import repository.AdminRepository;
 import repository.BookingRepository;
+import repository.PaymentRepository;
 import repository.ShowRepository;
 import service.AdminServices;
 import service.BookingServices;
+import service.PaymentServices;
 import service.ShowServices;
 
 import java.time.LocalDateTime;
@@ -39,7 +43,9 @@ public class Main {
         ShowRepository showRepository = new ShowRepository(adminRepository);
         ShowServices showServices = new ShowServices(showRepository);
         BookingRepository bookingRepository=new BookingRepository();
-        BookingServices bookingServices=new BookingServices(showRepository,bookingRepository);
+        PaymentRepository paymentRepository = new PaymentRepository();
+        PaymentServices paymentService = new PaymentServices(paymentRepository);
+        BookingServices bookingServices=new BookingServices(showRepository,bookingRepository,paymentService);
         UserController UserController = new UserController(showServices,bookingServices);
         List<Show> shows= UserController.searchShow("little krishna");
         for (Show show : shows) {
@@ -58,7 +64,9 @@ public class Main {
         System.out.println("Booking Created by: " + booking.getUser()+", with booking id:"+ booking.getBookingId() );
 
 // Simulate payment success
-        BookingStatus bookingStatus=UserController.confirm(booking.getBookingId(), true);
+        PaymentMode mode = PaymentMode.UPI;
+        PaymentStrategy strategy =PaymentFactory.getStrategy(mode);
+        BookingStatus bookingStatus=UserController.confirm(booking.getBookingId(), mode,strategy);
         System.out.println(bookingStatus==BookingStatus.CONFIRMED?"Booking Confirmed":"Booking Failed");
 
 

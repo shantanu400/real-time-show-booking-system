@@ -3,8 +3,10 @@ package controller;
 import entity.Booking;
 import entity.Show;
 import enums.BookingStatus;
+import enums.PaymentMode;
 import exception.InvalidInputException;
 import exception.NotFoundException;
+import payment.PaymentStrategy;
 import service.BookingServices;
 import service.ShowServices;
 
@@ -45,8 +47,9 @@ public class UserController {
         return bookingServices.createBooking(showId, seats,user, amount);
     }
 
-    public BookingStatus confirm(String bookingId, boolean paymentSuccess) {
-        return bookingServices.confirmBooking(bookingId, paymentSuccess);
+    public BookingStatus confirm(String bookingId, PaymentMode mode, PaymentStrategy paymentStrategy) {
+
+        return bookingServices.confirmBooking(bookingId,mode, paymentStrategy);
     }
 
 

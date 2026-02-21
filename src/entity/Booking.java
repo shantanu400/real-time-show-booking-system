@@ -46,5 +46,11 @@ public class Booking {
     public void setFailed() {
         this.status = BookingStatus.FAILED;
     }
+    public BookingStatus getStatus(){
+        return this.status;
+    }
 
+    public double getTotalAmount() {
+        return totalAmount;
+    }
 }
